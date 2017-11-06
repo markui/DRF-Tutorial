@@ -12,6 +12,12 @@ config/urls.py에 snippets.urls를 include
 
 아래의 snippet_list 뷰기
     /snippets/에 연결되도록 url을 구성
+    
+    
+    
+아래의 snippet_detail 뷰가 
+    /snippets/<pk>/ 에 연결되도록 url 구성
+    ex) /snippets/3/
 """
 
 
@@ -42,3 +48,29 @@ def snippet_list(request):
             return JsonResponse(serializer.data, status=201)
         # 유효하지 않으면 인스턴스의 에러들을 HTTP 400 Bad request상태코드와 함께 보여줌
         return JsonResponse(serializer.errors, status=400)
+
+
+@csrf_exempt
+def snippet_detail(request, pk):
+    # pk에 해당하는 Snippet이 존재하는지 확인 후 snippet변수에 할당
+    try:
+        snippet = Snippet.objects.get(pk=pk)
+    except Snippet.DoesNotExist:
+        return HttpResponse(status=404)
+
+    if request.method == 'GET':
+        # GET요청시에는 snippet을 serialize한 결과를 보여줌
+        serializer = SnippetSerializer(snippet)
+        return JsonResponse(serializer.data)
+    elif request.method == 'PUT':
+        # PUT요청시에는 전달된 데이터를 이용해서 snippet인스턴스의 내용을 변경
+        data = JSONParser().parse(request)
+        serializer = SnippetSerializer(snippet, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data)
+        return JsonResponse(serializer.errors, status=400)
+    elif request.method == 'DELETE':
+        # DELETE요청시에는 해당 Snippet인스턴스를 삭제
+        snippet.delete()
+        return HttpResponse(status=204)
