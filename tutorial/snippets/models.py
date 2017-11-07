@@ -1,6 +1,8 @@
+from django.conf import settings
 from django.db import models
 from pygments.lexers import get_all_lexers
 from pygments.styles import get_all_styles
+
 
 LEXERS = [item for item in get_all_lexers() if item[1]]
 # CHOICCES; 1번째 elem: DB에 들어갈 것 / 2번째 elem: 눈에 보이는 것
