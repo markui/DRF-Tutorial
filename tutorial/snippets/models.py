@@ -3,7 +3,7 @@ from pygments.lexers import get_all_lexers
 from pygments.styles import get_all_styles
 
 LEXERS = [item for item in get_all_lexers() if item[1]]
-# 1번째 elem: DB에 들어갈 것 / 2번째 elem: 눈에 표시 되는 것
+# CHOICCES; 1번째 elem: DB에 들어갈 것 / 2번째 elem: 눈에 보이는 것
 LANGUAGE_CHOICES = sorted([(item[1][0], item[0]) for item in LEXERS])
 STYLE_CHOICES = sorted((item, item) for item in get_all_styles())
 
